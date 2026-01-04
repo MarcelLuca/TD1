@@ -1,0 +1,181 @@
+================================================================================
+                    INSTRUCTIONS POUR L'ÉTUDIANT
+                    Application Console - Annuaire
+================================================================================
+
+OBJECTIF :
+Créer une application console permettant de gérer un annuaire de personnes
+avec les fonctionnalités de consultation, création et suppression.
+
+================================================================================
+PARTIE 1 : Classe Personne
+================================================================================
+
+La classe Personne est déjà définie avec ses champs privés et propriétés.
+Vous n'avez rien à modifier dans cette classe.
+
+================================================================================
+PARTIE 2 : Classe AnnuaireService
+================================================================================
+
+2.1. Méthode InitListePersonnes
+--------------------------------
+Cette méthode doit initialiser la liste avec deux personnes d'exemple :
+- Personne 1 : Mr Jean Dupont, né le 15/03/1985, habitant 10 Rue de la République, 
+  69000 Lyon, téléphone 612345678
+- Personne 2 : Mme Sophie Martin, née le 22/07/1990, habitant 25 Avenue de France,
+  75000 Paris, téléphone 698765432
+
+INSTRUCTIONS :
+1. Créer deux objets Personne (p1 et p2)
+2. Remplir toutes les propriétés de chaque personne
+3. Ajouter les deux personnes à la liste listePersonnes
+4. Retourner la liste
+
+2.2. Méthode GetListePersonnes
+-------------------------------
+Cette méthode doit renvoyer la liste des personnes stockées dans la classe.
+
+INSTRUCTIONS :
+1. Retourner la liste privée listePersonnes
+
+Note : Plus tard, cette méthode effectuera une requête en base de données pour
+récupérer la liste des personnes stockées.
+
+2.3. Méthode CreationPersonne
+------------------------------
+Cette méthode permet de créer (ajouter) une personne à l'annuaire.
+
+INSTRUCTIONS :
+1. Ajouter l'objet Personne passé en paramètre à la liste listePersonnes
+2. Utiliser la méthode Add() de la liste
+
+Note : Sans base de données, cette méthode ne fait pour le moment qu'ajouter
+l'objet passé en paramètre à la liste de personnes.
+
+2.4. Méthode SuppressionPersonne
+---------------------------------
+Cette méthode permet de supprimer une personne de l'annuaire.
+
+INSTRUCTIONS :
+1. Supprimer l'objet Personne passé en paramètre de la liste listePersonnes
+2. Utiliser la méthode Remove() de la liste : listePersonnes.Remove(personne)
+
+Note : Sans base de données, cette méthode ne fait pour le moment que supprimer
+de la liste la personne passée en paramètre.
+
+================================================================================
+PARTIE 3 : Application Console - Program.cs
+================================================================================
+
+3.1. Méthode Main
+-----------------
+Cette méthode est le point d'entrée de l'application.
+
+INSTRUCTIONS :
+1. Créer une instance de AnnuaireService
+2. Appeler InitListePersonnes() pour initialiser les données
+3. Créer une boucle while qui continue tant que l'utilisateur ne choisit pas de quitter
+4. Dans la boucle :
+   - Afficher le menu (appeler AfficherMenu())
+   - Lire le choix de l'utilisateur avec Console.ReadLine()
+   - Utiliser un switch pour traiter le choix :
+     * "1" : Appeler ListerPersonnes(service)
+     * "2" : Appeler CreerPersonne(service)
+     * "3" : Appeler SupprimerPersonne(service)
+     * "4" : Sortir de la boucle et afficher "Au revoir !"
+     * Autre : Afficher "Choix invalide. Veuillez réessayer."
+5. Après chaque action (sauf quitter), demander à l'utilisateur d'appuyer sur une touche
+   et effacer la console avant de réafficher le menu
+
+3.2. Méthode AfficherMenu
+--------------------------
+Cette méthode affiche le menu principal de l'application.
+
+INSTRUCTIONS :
+1. Afficher le titre "=== MENU ANNUAIRE ==="
+2. Afficher les options :
+   - "1. Lister les personnes"
+   - "2. Créer une nouvelle personne"
+   - "3. Supprimer une personne"
+   - "4. Quitter"
+3. Demander le choix avec "Votre choix : "
+
+3.3. Méthode ListerPersonnes
+-----------------------------
+Cette méthode affiche toutes les personnes de l'annuaire.
+
+INSTRUCTIONS :
+1. Afficher le titre "=== LISTE DES PERSONNES ==="
+2. Récupérer la liste des personnes via service.GetListePersonnes()
+3. Si la liste est vide, afficher "Aucune personne dans l'annuaire."
+4. Sinon, parcourir la liste avec un foreach et pour chaque personne afficher :
+   - Le numéro (index + 1)
+   - La civilité, prénom et nom
+   - La date de naissance au format dd/MM/yyyy
+   - L'adresse complète (numéro rue, nom rue, code postal, ville)
+   - Le numéro de téléphone
+   - Une ligne vide pour séparer
+
+3.4. Méthode CreerPersonne
+---------------------------
+Cette méthode permet à l'utilisateur de créer une nouvelle personne.
+
+INSTRUCTIONS :
+1. Afficher le titre "=== CRÉATION D'UNE NOUVELLE PERSONNE ==="
+2. Créer un nouvel objet Personne
+3. Demander et lire chaque information :
+   - Civilité (Mr/Mme) : Console.ReadLine()
+   - Nom : Console.ReadLine()
+   - Prénom : Console.ReadLine()
+   - Date de naissance (format AAAA-MM-JJ) : 
+     * Utiliser DateOnly.TryParse() pour valider
+     * Si invalide, utiliser la date du jour avec DateOnly.FromDateTime(DateTime.Now)
+   - Ville : Console.ReadLine()
+   - Code postal : 
+     * Utiliser int.TryParse() pour valider
+   - Nom de la rue : Console.ReadLine()
+   - Numéro de rue : 
+     * Utiliser int.TryParse() pour valider
+   - Numéro de téléphone : 
+     * Utiliser int.TryParse() pour valider
+4. Assigner chaque valeur à la propriété correspondante de l'objet Personne
+5. Appeler service.CreationPersonne() avec la nouvelle personne
+6. Afficher "Personne créée avec succès !"
+
+3.5. Méthode SupprimerPersonne
+-------------------------------
+Cette méthode permet à l'utilisateur de supprimer une personne.
+
+INSTRUCTIONS :
+1. Afficher le titre "=== SUPPRESSION D'UNE PERSONNE ==="
+2. Récupérer la liste des personnes via service.GetListePersonnes()
+3. Si la liste est vide, afficher "Aucune personne dans l'annuaire." et retourner
+4. Sinon :
+   - Afficher "Liste des personnes :"
+   - Parcourir la liste et afficher chaque personne avec son numéro :
+     "1. Civilité Prénom Nom - Ville"
+   - Demander le numéro de la personne à supprimer
+   - Valider que le numéro est valide (entre 1 et le nombre de personnes)
+   - Récupérer la personne correspondante (index = choix - 1)
+   - Appeler service.SuppressionPersonne() avec cette personne
+   - Afficher un message de confirmation avec le nom de la personne supprimée
+   - Si le numéro est invalide, afficher "Numéro invalide."
+
+================================================================================
+CONSEILS
+================================================================================
+
+- Utilisez Console.WriteLine() pour afficher du texte
+- Utilisez Console.Write() pour afficher sans retour à la ligne
+- Utilisez Console.ReadLine() pour lire une saisie utilisateur
+- Utilisez Console.ReadKey() pour attendre une touche
+- Utilisez Console.Clear() pour effacer la console
+- Pour les conversions, utilisez TryParse() pour éviter les erreurs
+- N'oubliez pas de gérer les cas où la liste est vide
+- Testez votre application après chaque méthode implémentée
+
+================================================================================
+BONNE CHANCE !
+================================================================================
+
