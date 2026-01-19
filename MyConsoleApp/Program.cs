@@ -7,66 +7,162 @@ namespace MyConsoleApp
     {
         static void Main(string[] args)
         {
-            // TODO : 
-            // 1. Créer une instance de AnnuaireService
-            // 2. Appeler InitListePersonnes() pour initialiser les données
-            // 3. Créer une boucle while avec un menu interactif
-            // 4. Gérer les choix utilisateur (1: Lister, 2: Créer, 3: Supprimer, 4: Quitter)
-            
-            // À compléter par l'étudiant - Voir CODE_REFERENCE.txt pour la solution
-            throw new NotImplementedException();
+            AnnuaireService service = new AnnuaireService();
+            service.InitListePersonnes();
+
+            bool continuer = true;
+            while (continuer)
+            {
+                AfficherMenu();
+                string choix = Console.ReadLine();
+
+                switch (choix)
+                {
+                    case "1":
+                        ListerPersonnes(service);
+                        break;
+                    case "2":
+                        CreerPersonne(service);
+                        break;
+                    case "3":
+                        SupprimerPersonne(service);
+                        break;
+                    case "4":
+                        continuer = false;
+                        Console.WriteLine("Au revoir !");
+                        break;
+                    default:
+                        Console.WriteLine("Choix invalide. Veuillez réessayer.");
+                        break;
+                }
+
+                if (continuer)
+                {
+                    Console.WriteLine("\nAppuyez sur une touche pour continuer...");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            }
         }
 
         static void AfficherMenu()
         {
-            // TODO : Afficher le menu avec les options :
-            // 1. Lister les personnes
-            // 2. Créer une nouvelle personne
-            // 3. Supprimer une personne
-            // 4. Quitter
-            
-            // À compléter par l'étudiant - Voir CODE_REFERENCE.txt pour la solution
-            throw new NotImplementedException();
+            Console.WriteLine("=== MENU ANNUAIRE ===");
+            Console.WriteLine("1. Lister les personnes");
+            Console.WriteLine("2. Créer une nouvelle personne");
+            Console.WriteLine("3. Supprimer une personne");
+            Console.WriteLine("4. Quitter");
+            Console.Write("\nVotre choix : ");
         }
 
         static void ListerPersonnes(AnnuaireService service)
         {
-            // TODO :
-            // 1. Récupérer la liste des personnes via service.GetListePersonnes()
-            // 2. Si la liste est vide, afficher un message
-            // 3. Sinon, parcourir la liste et afficher toutes les informations de chaque personne
-            
-            // À compléter par l'étudiant - Voir CODE_REFERENCE.txt pour la solution
-            throw new NotImplementedException();
+            Console.WriteLine("\n=== LISTE DES PERSONNES ===");
+            var personnes = service.GetListePersonnes();
+
+            if (personnes.Count == 0)
+            {
+                Console.WriteLine("Aucune personne dans l'annuaire.");
+            }
+            else
+            {
+                int index = 1;
+                foreach (var p in personnes)
+                {
+                    Console.WriteLine($"{index}. {p.Civilite} {p.Prenom} {p.Nom}");
+                    Console.WriteLine($"   Date de naissance : {p.DateNaissance:dd/MM/yyyy}");
+                    Console.WriteLine($"   Adresse : {p.NumeroRue} {p.NomRue}, {p.CodePostal} {p.Ville}");
+                    Console.WriteLine($"   Téléphone : {p.NumeroTelephone}");
+                    Console.WriteLine();
+                    index++;
+                }
+            }
         }
 
         static void CreerPersonne(AnnuaireService service)
         {
-            // TODO :
-            // 1. Créer un nouvel objet Personne
-            // 2. Demander et lire toutes les informations (civilité, nom, prénom, date de naissance, etc.)
-            // 3. Valider les entrées numériques avec TryParse()
-            // 4. Assigner les valeurs aux propriétés de l'objet Personne
-            // 5. Appeler service.CreationPersonne() avec la nouvelle personne
-            // 6. Afficher un message de confirmation
-            
-            // À compléter par l'étudiant - Voir CODE_REFERENCE.txt pour la solution
-            throw new NotImplementedException();
+            Console.WriteLine("\n=== CRÉATION D'UNE NOUVELLE PERSONNE ===");
+
+            Personne nouvellePersonne = new Personne();
+
+            Console.Write("Civilité (Mr/Mme) : ");
+            nouvellePersonne.Civilite = Console.ReadLine() ?? "";
+
+            Console.Write("Nom : ");
+            nouvellePersonne.Nom = Console.ReadLine() ?? "";
+
+            Console.Write("Prénom : ");
+            nouvellePersonne.Prenom = Console.ReadLine() ?? "";
+
+            Console.Write("Date de naissance (AAAA-MM-JJ) : ");
+            if (DateOnly.TryParse(Console.ReadLine(), out DateOnly dateNaissance))
+            {
+                nouvellePersonne.DateNaissance = dateNaissance;
+            }
+            else
+            {
+                Console.WriteLine("Date invalide, utilisation de la date du jour.");
+                nouvellePersonne.DateNaissance = DateOnly.FromDateTime(DateTime.Now);
+            }
+
+            Console.Write("Ville : ");
+            nouvellePersonne.Ville = Console.ReadLine() ?? "";
+
+            Console.Write("Code postal : ");
+            if (int.TryParse(Console.ReadLine(), out int codePostal))
+            {
+                nouvellePersonne.CodePostal = codePostal;
+            }
+
+            Console.Write("Nom de la rue : ");
+            nouvellePersonne.NomRue = Console.ReadLine() ?? "";
+
+            Console.Write("Numéro de rue : ");
+            if (int.TryParse(Console.ReadLine(), out int numeroRue))
+            {
+                nouvellePersonne.NumeroRue = numeroRue;
+            }
+
+            Console.Write("Numéro de téléphone : ");
+            if (int.TryParse(Console.ReadLine(), out int numeroTelephone))
+            {
+                nouvellePersonne.NumeroTelephone = numeroTelephone;
+            }
+
+            service.CreationPersonne(nouvellePersonne);
+            Console.WriteLine("\nPersonne créée avec succès !");
         }
 
         static void SupprimerPersonne(AnnuaireService service)
         {
-            // TODO :
-            // 1. Récupérer la liste des personnes
-            // 2. Si la liste est vide, afficher un message et retourner
-            // 3. Sinon, afficher la liste numérotée des personnes
-            // 4. Demander le numéro de la personne à supprimer
-            // 5. Valider le numéro (entre 1 et le nombre de personnes)
-            // 6. Récupérer la personne correspondante et appeler service.SuppressionPersonne()
-            // 7. Afficher un message de confirmation
-            
-            // À compléter par l'étudiant - Voir CODE_REFERENCE.txt pour la solution
-            throw new NotImplementedException();
+            Console.WriteLine("\n=== SUPPRESSION D'UNE PERSONNE ===");
+            var personnes = service.GetListePersonnes();
+
+            if (personnes.Count == 0)
+            {
+                Console.WriteLine("Aucune personne dans l'annuaire.");
+                return;
+            }
+
+            Console.WriteLine("\nListe des personnes :");
+            int index = 1;
+            foreach (var p in personnes)
+            {
+                Console.WriteLine($"{index}. {p.Civilite} {p.Prenom} {p.Nom} - {p.Ville}");
+                index++;
+            }
+
+            Console.Write("\nNuméro de la personne à supprimer : ");
+            if (int.TryParse(Console.ReadLine(), out int choix) && choix >= 1 && choix <= personnes.Count)
+            {
+                Personne personneASupprimer = personnes[choix - 1];
+                service.SuppressionPersonne(personneASupprimer);
+                Console.WriteLine($"\n{personneASupprimer.Prenom} {personneASupprimer.Nom} a été supprimé(e) de l'annuaire.");
+            }
+            else
+            {
+                Console.WriteLine("Numéro invalide.");
+            }
         }
     }
 }
